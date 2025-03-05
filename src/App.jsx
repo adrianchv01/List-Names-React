@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -28,13 +29,15 @@ const App = () => {
     setNewName('')
     setNewNumber('')
   }
-  const filterName = 
+  
   
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Filter names={persons} newName={newName}/>
       <form onSubmit={addNewName}>
+        
         <div>
           name: <input value={newName} onChange={handleNewName}/>
           <br />
