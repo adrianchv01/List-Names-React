@@ -27,19 +27,47 @@ const App = () => {
   const handleNewName = e => setNewName(e.target.value);
   const handleNewNumber = e => setNewNumber(e.target.value);
 
+  const deletePerson = person => {
+    const request = axios.delete(`http://localhost:3001/persons/${person.id}`)
+    window.confirm(`Eliminar ${person.name}`)
+    return request
+    .then(
+      () => {
+        setPersons(persons.filter((p) => p.id !== person.id))
+      }
+    )
+    .catch(error => {
+      console.log('errror al actualizar')
+    }
+    )
+  }
+
   const addNewName = (event) =>{
     //AL parecer si no pongo este codigo al agregar un codigo, desaparece de la
     //lista esto debido a que el comportamiento del formulario es enviarse
+    const ids = persons.map(p => p.id);
+    
+
+    const newId = ids.length > 0 ? Math.max(...ids) + 1 : 1;
+    console.log(newId);
+
     event.preventDefault();
     const nameObject = {
-      id: persons.length + 1,
+      id: newId.toString(),
       name: newName,
       number:newNumber
+      
     }
-    setPersons(persons.concat(nameObject))
-    alert(`${newName} is already added`)
-    setNewName('')
-    setNewNumber('')
+    const request = axios.post('http://localhost:3001/persons', nameObject)
+    request.then(response => {
+      setPersons(persons.concat(nameObject))
+      setNewName(' ')
+      setNewNumber(' ')
+    })
+
+    toString(persons.id);
+    console.log(request);
+    
   }
   
   
@@ -62,7 +90,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {persons.map((per) => 
-          <li key={per.id}>Name: {per.name} <br /> Number: {per.number}</li>
+          <li key={per.id}>Name: {per.name} <br /> Number: {per.number} <button onClick={() => deletePerson(per)}>Delete</button></li>
         )}
       </ul>
       <div>debug: {newName}</div>
